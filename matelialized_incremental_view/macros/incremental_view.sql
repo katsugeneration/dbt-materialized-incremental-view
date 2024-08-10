@@ -1,9 +1,9 @@
-{% macro is_view_build() %}
+{% macro is_latest_layer() %}
     {#-- do not run introspective queries in parsing #}
     {% if not execute %}
         {{ return(False) }}
     {% else %}
-        {{ return(model.config.is_view_layer) }}
+        {{ return(model.config.is_latest_layer) }}
     {% endif %}
 {% endmacro %}
 
@@ -31,12 +31,12 @@
         type='view',
         ) %}
 
-    {% do model.config.update({'is_view_layer': false}) %}
+    {% do model.config.update({'is_latest_layer': false}) %}
     {% do materialization_incremental_bigquery.context.update({'this': target_relation_stack}) %}
     {% do materialization_incremental_bigquery.context.update({'sql': render(model.raw_code)}) %}
     {{ materialization_incremental_bigquery() }}
 
-    {% do model.config.update({'is_view_layer': true}) %}
+    {% do model.config.update({'is_latest_layer': true}) %}
     {% call statement('latest') %}
         {{ create_view_as(target_relation_latest, render(model.raw_code)) }}
     {% endcall %}
