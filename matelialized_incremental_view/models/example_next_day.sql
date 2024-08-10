@@ -41,7 +41,7 @@ with base as (
 select
     *
 from base
-{% if is_latest_layer() %}
+{% if is_view_layer() %}
 where partition_date >= date('2024-07-21')
 {% else %}
 where partition_date < date('2024-07-21')
