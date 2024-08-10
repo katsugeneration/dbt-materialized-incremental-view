@@ -31,10 +31,11 @@
         type='view',
         ) %}
 
+    {% set incremental_function = dbt['materialization_incremental_' + adapter.type()] %}
     {% do model.config.update({'is_view_layer': false}) %}
-    {% do materialization_incremental_bigquery.context.update({'this': target_relation_stack}) %}
-    {% do materialization_incremental_bigquery.context.update({'sql': render(model.raw_code)}) %}
-    {{ materialization_incremental_bigquery() }}
+    {% do incremental_function.context.update({'this': target_relation_stack}) %}
+    {% do incremental_function.context.update({'sql': render(model.raw_code)}) %}
+    {{ incremental_function() }}
 
     {% do model.config.update({'is_view_layer': true}) %}
     {% call statement('latest') %}
