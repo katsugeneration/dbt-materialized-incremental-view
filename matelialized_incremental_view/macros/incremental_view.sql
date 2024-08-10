@@ -31,7 +31,7 @@
         type='view',
         ) %}
 
-    {% set incremental_function = dbt['materialization_incremental_' + adapter.type()] %}
+    {% set incremental_function = context['materialization_incremental_' + adapter.type()] %}
     {% do model.config.update({'is_view_layer': false}) %}
     {% do incremental_function.context.update({'this': target_relation_stack}) %}
     {% do incremental_function.context.update({'sql': render(model.raw_code)}) %}
